@@ -26,12 +26,14 @@ int CAFEDENDA = 0;
 int CAFEDENDAKHONGDUONG = 0;
 int CAFEDENNONG = 0;
 
-#define bom1 D0
-#define bom2 D1
-#define bom3 D4
-#define bom4 D5
+#define rlrice D0
+#define rlkhuay D1
+#define rlnungnhiet D4
 
-
+#define bom1 D5
+#define bom2 D6
+#define bom3 D7
+#define bom4 D8
 
 int receiveData = 0;
 #define EN_RS485 D3
