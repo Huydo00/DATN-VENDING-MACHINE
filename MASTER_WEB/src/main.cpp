@@ -154,7 +154,7 @@ void scaranguyenlieu1(){
     }
   }
 }
-void scaralnguyenlieu2(){
+void scaranguyenlieu2(){
   delay(10);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:3");
@@ -252,7 +252,7 @@ void CFSUA(){
   delay(5);
 
   scaranguyenlieu1();   //sua
-  delay(5)
+  delay(5);
   nguyenlieu1();
   delay(5);
 
@@ -280,9 +280,10 @@ void CFSUA(){
 void CFSUAtest(){
   layly();
   delay(5);
-  scaralayly();
-  delay(5);
 }
+
+
+/******************************   FUNCTION   *******************************/
 
 
 
@@ -320,7 +321,7 @@ void setup() {
   // }
   // firebaseconnect();
   delay(2000);
-  layly();
+  CFSUAtest();
 }
 void loop() {
     
