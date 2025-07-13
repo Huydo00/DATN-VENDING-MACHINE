@@ -24,13 +24,17 @@
 #define EN_RS485 12
 #define DONE 13
 
-#define ENL298N 4
-#define M1L298N 7
-#define M2L298N 11
+// #define ENL298N 4
+// #define M1L298N 7
+#define servoLy1 4
+#define servoLy2 7
 int timelayhang = 120;
 SoftwareSerial RS485Serial(RX, TX); // RX, TX
 
-Servo myservo;
+Servo myservo1;
+Servo myservo2;
+int pos1 = 0;
+int pos2 = 45;
 int ena = 8;
 int step_X = 2 ; int dir_X = 5;
 int step_Y = 3 ; int dir_Y = 6;
@@ -102,19 +106,9 @@ void lyHa(int lyha){
   Step_Y.runToPosition();
   Step_Y.disableOutputs();
 }
-void cangDay(int timeday){
-  digitalWrite(ENL298N,HIGH);
-  digitalWrite(M1L298N,HIGH);
-  digitalWrite(M2L298N,LOW);
-  delay(timeday);
-  digitalWrite(ENL298N,LOW);
+void cangDay(int cangday){
 }
-void cangRut(int timerut){
-  digitalWrite(ENL298N,HIGH);
-  digitalWrite(M1L298N,LOW);
-  digitalWrite(M2L298N,HIGH);
-  delay(timelayhang*1000);
-  digitalWrite(ENL298N,LOW);
+void cangRut(int cangrut){
 }
 
 
@@ -132,11 +126,21 @@ void cangRut(int timerut){
 // B4: đẩy càng (càng được đẩy ra để tách ly)
 // B5: hạ ly xuống đến hết hành trình và chờ cánh tay robot lấy
 void layly(){
-  lyNang(4000);
-  cangRut(2000);
-  lyHa(-100);
-  cangDay(2000);
-  lyHa(-3900);
+  for(pos1 = 0; pos1 < 45; pos1 += 1)  
+  {                                
+    pos2--;
+    myservo1.write(pos1);            
+    myservo2.write(pos2);  
+    delay(15);                     
+  }
+  for(pos1 = 45; pos1>=1; pos1-=1)  
+  {                                
+    pos2++;
+    myservo1.write(pos1);  
+    myservo2.write(pos2);  
+    delay(15);    
+  }
+  delay(2000);
 }
 
 /********** TRA HANG ***********/
@@ -146,9 +150,9 @@ void layly(){
 // B3: 120s
 // B2: nâng trả hàng lên
 void trahang(){
-  trahangxuong(-2800)
-  delay(120000);
-  trahanglen(2800)
+//   trahangxuong(-2800);
+//   delay(120000);
+//   trahanglen(2800);
 }
 
 
@@ -165,10 +169,8 @@ void trahang(){
 void setup() {
   Serial.begin(9600);
   RS485Serial.begin(9600);
-
-  pinMode(M1L298N, OUTPUT);
-  pinMode(M2L298N, OUTPUT);
-  pinMode(ENL298N, OUTPUT);
+  myservo1.attach(servoLy1);
+  myservo2.attach(servoLy2);  
 
   pinMode(DONE, OUTPUT);
   pinMode(EN_RS485, OUTPUT);
@@ -195,38 +197,40 @@ void setup() {
   Step_Y.setAcceleration(1000);
 
   digitalWrite(DONE,LOW);
-
+  digitalWrite(EN_RS485,LOW);
   // homeX();
   // Step_X.setEnablePin(8);
   // Step_X.moveTo(3000);     //4300
   // Step_X.runToPosition();
   // Step_X.disableOutputs();
   
-  homeY();
-  Step_Y.setEnablePin(8);
-  Step_Y.moveTo(200);     //4300
-  Step_Y.runToPosition();
-  Step_Y.disableOutputs();
+  // homeY();
+  // Step_Y.setEnablePin(8);
+  // Step_Y.moveTo(200);     //4300
+  // Step_Y.runToPosition();
+  // Step_Y.disableOutputs();
+
 }
 
 void loop(){
-  if (RS485Serial.available()) {
-    String DATATHL = RS485Serial.readStringUntil('\n');
-    /**********SL1:1 layly ***********/
-    if(DATATHL == "SL1:1"){
-      Serial.println(DATATHL);
-      layly();
-      digitalWrite(DONE,HIGH);
-    }
-    /**********SL1:2 trahang ***********/
-    if(DATATHL == "SL1:2"){
-      Serial.println(DATATHL);
-      trahang();
-      digitalWrite(DONE,HIGH);
-    }
-    delay(200);
-    digitalWrite(DONE,LOW);
-  }
+
+  // if (RS485Serial.available()) {
+  //   String DATATHL = RS485Serial.readStringUntil('\n');
+  //   /**********SL1:1 layly ***********/
+  //   if(DATATHL == "SL1:1"){
+  //     Serial.println(DATATHL);
+  //     layly();
+  //     digitalWrite(DONE,HIGH);
+  //   }
+  //   /**********SL1:2 trahang ***********/
+  //   if(DATATHL == "SL1:2"){
+  //     Serial.println(DATATHL);
+  //     trahang();
+  //     digitalWrite(DONE,HIGH);
+  //   }
+  //   delay(200);
+  //   digitalWrite(DONE,LOW);
+  // }
 
 }
 

@@ -57,7 +57,7 @@ void homeZ(){
   Step_Z.setCurrentPosition(0);
   homeZ = 0;
 
-  Step_Z.moveTo(-600);
+  Step_Z.moveTo(-300);
   while (Step_Z.distanceToGo()!=0)
   {
     Step_Z.run();
@@ -153,8 +153,8 @@ void run(byte Ser, int X, int Y, int Z, int A)
 }
 /******************************   FUCTION   *******************************/
 void scaralayly(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+  run(0, 5000, 6000, 300, 600);
+  run(0, 5000, 10000, 1500, 600);
 }
 void scaranguyenlieu1(){
   run(0, 300, 300, 600, 600);
@@ -228,25 +228,36 @@ void setup() {
   Step_Z.setPinsInverted(false, false, true);
   Step_A.setPinsInverted(false, false, true);
 
-  Step_X.setMaxSpeed(500);
-  Step_X.setAcceleration(500);
-  Step_Y.setMaxSpeed(500);
-  Step_Y.setAcceleration(500);
-  Step_Z.setMaxSpeed(500);
-  Step_Z.setAcceleration(500);
-  Step_A.setMaxSpeed(500);
-  Step_A.setAcceleration(500);
+  Step_X.setMaxSpeed(600);
+  Step_X.setAcceleration(600);
+  Step_Y.setMaxSpeed(600);
+  Step_Y.setAcceleration(600);
+  Step_Z.setMaxSpeed(600);
+  Step_Z.setAcceleration(600);
+  Step_A.setMaxSpeed(600);
+  Step_A.setAcceleration(600);
   
   homeZ();
   homeXY();
   homeA();
-  //Vitrigoc
-  run(0, 300, 300, 600, 600);
-  delay(500);
-  run(0, 300, 300, 600, 1500);
-  delay(500);
-  run(0, 300, 300, 600, 600);
-  delay(500);
+
+  //CF SUA
+  //scaralayly();
+  run(0, 5000, 8000, 300, 600);
+  run(0, 5000, 10000, 1500, 600);
+  delay(2000);
+  // scaranguyenlieu1();
+  run(0, 3500, 3500, 600, 600);
+  run(0, 3000, 3500, 1600, 600);
+  delay(2000);
+  // scaranguyenlieu2(); 
+  // delay(2000);
+  // scaradkhuay();
+  // delay(2000);
+  // scaradice();
+  // delay(2000);
+  // scaratrahang();
+  // delay(2000);
 }
 
 void loop(){

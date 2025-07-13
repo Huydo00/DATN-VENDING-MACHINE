@@ -38,7 +38,7 @@ int CAFEDENNONG = 0;
 int receiveData = 0;
 #define EN_RS485 D3
 #define DONE D2
-SoftwareSerial RS485(3,1); //RX,TX
+SoftwareSerial RS485(3,1); //RX,TX    
 
 void firebaseconnect(){
   config.api_key = API_KEY;
@@ -258,7 +258,7 @@ void CFSUA(){
   nguyenlieu1();
   delay(5);
 
-  scaralnguyenlieu2();    //cafe
+  scaranguyenlieu2();    //cafe
   delay(5);
   nguyenlieu2();
   delay(5);
@@ -322,20 +322,17 @@ void setup() {
   //   delay(300);
   // }
   // firebaseconnect();
-  delay(2000);
-  CFSUAtest();
+
+  // delay(2000);
+  // layly();
 }
 void loop() {
-    
 
-
-  // if (Serial.available()) {
-
-  //   String dataToSend = Serial.readStringUntil('\n');
-  //   Serial.print("Data sent: ");
-  //   Serial.println(dataToSend);
-  //   if(dataToSend == "layly"){
-  //     layly();
+  // if (RS485.available()) {
+  //   String DATATHL = RS485.readStringUntil('\n');
+  //   /**********SL1:1 layly ***********/
+  //   if(DATATHL == "SL1:1"){
+  //     Serial.println(DATATHL);
   //   }
   // }
 
