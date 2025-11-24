@@ -18,7 +18,17 @@
     Z: 20-90             2/9
     A: 250mm
 */
+#define TX 1
+#define RX 0
+
+SoftwareSerial RS485Serial(RX, TX); // RX, TX
+
+// #define EN_RS485 12
+#define DONE 13
+
 Servo myservo;
+#define kep A2
+
 int ena = 8;
 int step_X = 2 ; int dir_X = 5;
 int step_Y = 3 ; int dir_Y = 6;
@@ -132,9 +142,6 @@ void run(byte Ser, int X, int Y, int Z, int A)
   Step_Y.setEnablePin(8);
   Step_Z.setEnablePin(8);
   Step_A.setEnablePin(8);
-  
-  myservo.write(Ser);
-
   Step_X.moveTo(X);
   Step_Y.moveTo(Y);
   Step_Z.moveTo(-Z);
@@ -152,39 +159,65 @@ void run(byte Ser, int X, int Y, int Z, int A)
   Step_A.disableOutputs();
 }
 /******************************   FUCTION   *******************************/
+void scaramokep(){
+  myservo.write(90);
+}
+void scaradongkep(){
+  myservo.write(45);
+}
+void scaracholayly(){
+  run(0, 3000, 300, 300, 2000);
+  run(0, 5000, 8000, 600, 10000);
+  scaramokep();
+  run(0, 6000, 8800, 1300, 10000);
+}
 void scaralayly(){
-  run(0, 5000, 6000, 300, 600);
-  run(0, 5000, 10000, 1500, 600);
+  run(0, 6280, 8850, 1320, 10000);
+  scaradongkep();
+  run(0, 6280, 8850, 1320, 7000);
 }
 void scaranguyenlieu1(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+  run(0, 4000, 4000, 2000, 6000);
+  run(0, 2750, 5500, 2050, 6000);
 }
 void scaranguyenlieu2(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+  run(0, 3150, 4500, 2100, 6000);
 }
 void scaranguyenlieu3(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+  run(0, 3380, 3750, 2100, 6000);
 }
 void scaranguyenlieu4(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+  run(0, 3500, 2850, 2000, 6000);
 }
-void scaradice(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+void scaraice(){
+  run(0, 3500, 2850, 2000, 7000);
 }
-void scaradkhuay(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+void scarakhuay(){
+  run(0, 4000, 1400, 2000, 6000);
+  run(0, 2400, 2300, 1700, 6000);
+  run(0, 2400, 2300, 1700, 4000);
+}
+void scarakhuayend(){
+  run(0, 2400, 2300, 1700, 6000);
+  run(0, 3000, 1500, 1700, 6000);
 }
 void scaratrahang(){
-  run(0, 300, 300, 600, 600);
-  delay(500);
+  run(0, 4000, 4000, 2000, 6000);
+  run(0, 6200, 4600, 2000, 6000);
+  run(0, 6200, 4600, 2000, 11500);
+  scaramokep();
+  run(0, 6500, 4500, 2200, 11500);
+  run(0, 6500, 4500, 2200, 8500);
 }
-
+void scaraend(){
+  delay(5000);
+  run(0, 5900, 1500, 1300, 8500);
+  run(0, 4500, 500, 200, 4000);
+  run(0, 500, 500, 200, 700);
+  homeZ();
+  homeXY();
+  homeA();
+}
 
 
 
@@ -204,6 +237,15 @@ void scaratrahang(){
 /******************************   MAIN   *******************************/
 void setup() {
   Serial.begin(9600);
+  RS485Serial.begin(9600);
+  myservo.attach(kep);
+  scaradongkep();
+
+  pinMode(DONE, OUTPUT);
+  // pinMode(EN_RS485, OUTPUT);
+  // digitalWrite(EN_RS485, LOW);
+  digitalWrite(DONE,HIGH);
+
   pinMode(E_X, INPUT_PULLUP);
   pinMode(E_Y, INPUT_PULLUP);
   pinMode(E_Z, INPUT_PULLUP);
@@ -241,25 +283,102 @@ void setup() {
   homeXY();
   homeA();
 
-  //CF SUA
-  //scaralayly();
-  run(0, 5000, 8000, 300, 600);
-  run(0, 5000, 10000, 1500, 600);
-  delay(2000);
-  // scaranguyenlieu1();
-  run(0, 3500, 3500, 600, 600);
-  run(0, 3000, 3500, 1600, 600);
-  delay(2000);
-  // scaranguyenlieu2(); 
-  // delay(2000);
-  // scaradkhuay();
-  // delay(2000);
-  // scaradice();
-  // delay(2000);
+
+  // scarakhuay();
+
+  // scaralayly();
+  // scaranguyenlieu2();
+
   // scaratrahang();
-  // delay(2000);
+  // scaraend();
 }
 
 void loop(){
 
+  if (RS485Serial.available()) {
+    String DATATHL = RS485Serial.readStringUntil('\n');
+    /**********SL1:1 scaracholayly***********/
+    if(DATATHL == "SL2:1"){
+      Serial.println(DATATHL);
+      scaracholayly();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    /**********SL1:1 scaralayly***********/
+    if(DATATHL == "SL2:2"){
+      Serial.println(DATATHL);
+      scaralayly();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+
+
+
+
+
+    /**********SL1:2 NL1***********/
+    if(DATATHL == "SL2:3"){
+      Serial.println(DATATHL);
+      scaranguyenlieu1();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    /**********SL1:2 NL2***********/
+     if(DATATHL == "SL2:4"){
+      Serial.println(DATATHL);
+      scaranguyenlieu2();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    /**********SL1:2 NL1***********/
+    if(DATATHL == "SL2:5"){
+      Serial.println(DATATHL);
+      scaranguyenlieu3();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    /**********SL1:2 NL2***********/
+     if(DATATHL == "SL2:6"){
+      Serial.println(DATATHL);
+      scaranguyenlieu4();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+
+
+
+
+
+    /**********SL1:2 KHUAY***********/
+    if(DATATHL == "SL2:7"){
+      Serial.println(DATATHL);
+      scarakhuay();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    if(DATATHL == "SL2:71"){
+      Serial.println(DATATHL);
+      scarakhuayend();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    /**********SL1:2 ICE***********/
+     if(DATATHL == "SL2:8"){
+      Serial.println(DATATHL);
+      scaraice();
+      digitalWrite(DONE,LOW);
+      delay(100);
+    }
+    /**********SL1:2 TRAHANG***********/
+     if(DATATHL == "SL2:9"){
+      Serial.println(DATATHL);
+      scaratrahang();
+      digitalWrite(DONE,LOW);
+      delay(100);
+      digitalWrite(DONE,HIGH);
+      scaraend();
+    }
+
+  digitalWrite(DONE,HIGH);
+  }
 }

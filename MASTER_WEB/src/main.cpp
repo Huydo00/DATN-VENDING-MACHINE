@@ -19,24 +19,38 @@ FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-int s=0;
+int DataNL1=0;
+int DataNL2=0;
+int DataNL3=0;
+int DataNL4=0;
 
+int s=0;
 int CAFESUADA = 0;
 int CAFEDENDA = 0;
 int CAFEDENDAKHONGDUONG = 0;
 int CAFEDENNONG = 0;
 
-#define rlrice D0
-#define rlkhuay D1
-#define rlnungnhiet D4
+int FB_dataNL1 = 350;
+int FB_dataNL2 = 10;
+int FB_dataNL3 = 10;
+int FB_dataNL4 = 10;
 
-#define bom1 D5
+float dataNL1 = FB_dataNL1 *30000/60;    // 50*30000/60   120ml/ph
+float dataNL2 = FB_dataNL2 *30000/60;    // 50*30000/60   120ml/ph
+float dataNL3 = FB_dataNL3 *30000/60;    // 50*30000/60   120ml/ph
+float dataNL4 = FB_dataNL4 *30000/60;    // 50*30000/60   120ml/ph
+
+#define rlice D0
+#define rlnungnhiet D8
+
+#define bom1 D7
 #define bom2 D6
-#define bom3 D7
-#define bom4 D8
+#define bom3 D5
+#define bom4 D4
 
 int receiveData = 0;
 #define EN_RS485 D3
+#define DONE1 D1
 #define DONE D2
 SoftwareSerial RS485(3,1); //RX,TX    
 
@@ -66,19 +80,37 @@ void firebaseconnect(){
 
 
 /******************************   MASTER:WEB  *******************************/
-void nguyenlieu1(){
+void rotnguyenlieu1(){
+  digitalWrite(bom1,LOW);
+  delay(dataNL1);
+  digitalWrite(bom1,HIGH);
 }
-void nguyenlieu2(){
+void rotnguyenlieu2(){
+  digitalWrite(bom2,LOW);
+  delay(dataNL2);
+  digitalWrite(bom2,HIGH);
 }
-void nguyenlieu3(){
+void rotnguyenlieu3(){
+  digitalWrite(bom3,LOW);
+  delay(dataNL2);
+  digitalWrite(bom3,HIGH);
 }
-void nguyenlieu4(){
+void rotnguyenlieu4(){
+  digitalWrite(bom4,LOW);
+  delay(dataNL2);
+  digitalWrite(bom4,HIGH);
 }
-void hottemp(){
+
+void layda(){
+  digitalWrite(rlice,LOW);
+  delay(3000);
+  digitalWrite(rlice,HIGH);
 }
-void ice(){
-}
-void khuay(){
+
+void nungnong(){
+  digitalWrite(rlnungnhiet,LOW);
+  delay(3000);
+  digitalWrite(rlnungnhiet,HIGH);
 }
 
 
@@ -96,34 +128,73 @@ void khuay(){
 
 
 /******************************   SLAVE 1: STEP   *******************************/
-void layly(){
-  delay(10);
+void slave1tachly(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL1:1");
   delay(10);
   digitalWrite(EN_RS485, LOW);
   while(true){
-    if(digitalRead(DONE) == HIGH){
+    if(digitalRead(DONE1) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-
-void trahang(){
-  delay(10);
+void slave1haly(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL1:2");
   delay(10);
   digitalWrite(EN_RS485, LOW);
   while(true){
-    if(digitalRead(DONE) == HIGH){
+    if(digitalRead(DONE1) == HIGH){
       break;
     }
+    delay(10);
+  }
+}
+void slave1homelayly(){
+  delay(2000);
+  digitalWrite(EN_RS485,HIGH);
+  RS485.write("SL1:3");
+  delay(10);
+  digitalWrite(EN_RS485, LOW);
+  while(true){
+    if(digitalRead(DONE1) == HIGH){
+      break;
+    }
+    delay(10);
   }
 }
 
+void slave1trahang(){
+  delay(2000);
+  digitalWrite(EN_RS485,HIGH);
+  RS485.write("SL1:4");
+  delay(10);
+  digitalWrite(EN_RS485, LOW);
+  while(true){
+    if(digitalRead(DONE1) == HIGH){
+      break;
+    }
+    delay(10);
+  }
+}
 
-
+void slave1khuay(){
+  delay(2000);
+  digitalWrite(EN_RS485,HIGH);
+  RS485.write("SL1:5");
+  delay(10);
+  digitalWrite(EN_RS485, LOW);
+  while(true){
+    if(digitalRead(DONE1) == HIGH){
+      break;
+    }
+    delay(10);
+  }
+}
 
 
 
@@ -132,8 +203,8 @@ void trahang(){
 
 
 /******************************   SLAVE 2: SCARA   *******************************/
-void scaralayly(){
-  delay(10);
+void scaracholayly(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:1");
   delay(10);
@@ -142,10 +213,11 @@ void scaralayly(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-void scaranguyenlieu1(){
-  delay(10);
+void scaralayly(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:2");
   delay(10);
@@ -154,10 +226,11 @@ void scaranguyenlieu1(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-void scaranguyenlieu2(){
-  delay(10);
+void scaranguyenlieu1(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:3");
   delay(10);
@@ -166,10 +239,11 @@ void scaranguyenlieu2(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-void scaranguyenlieu3(){
-  delay(10);
+void scaranguyenlieu2(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:4");
   delay(10);
@@ -178,10 +252,11 @@ void scaranguyenlieu3(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-void scaranguyenlieu4(){
-  delay(10);
+void scaranguyenlieu3(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:5");
   delay(10);
@@ -190,10 +265,11 @@ void scaranguyenlieu4(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-void scaradice(){
-  delay(10);
+void scaranguyenlieu4(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:6");
   delay(10);
@@ -202,22 +278,13 @@ void scaradice(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
   }
 }
-void scaradkhuay(){
-  delay(10);
-  digitalWrite(EN_RS485,HIGH);
-  RS485.write("SL2:7");
-  delay(10);
-  digitalWrite(EN_RS485, LOW);
-  while(true){
-    if(digitalRead(DONE) == HIGH){
-      break;
-    }
-  }
-}
-void scaratrahang(){
-  delay(10);
+
+
+void scaradice(){
+  delay(2000);
   digitalWrite(EN_RS485,HIGH);
   RS485.write("SL2:8");
   delay(10);
@@ -226,6 +293,46 @@ void scaratrahang(){
     if(digitalRead(DONE) == HIGH){
       break;
     }
+    delay(10);
+  }
+}
+void scaradkhuay(){
+  delay(2000);
+  digitalWrite(EN_RS485,HIGH);
+  RS485.write("SL2:7");
+  delay(10);
+  digitalWrite(EN_RS485, LOW);
+  while(true){
+    if(digitalRead(DONE) == HIGH){
+      break;
+    }
+    delay(10);
+  }
+}
+void scaradkhuayend(){
+  delay(2000);
+  digitalWrite(EN_RS485,HIGH);
+  RS485.write("SL2:71");
+  delay(10);
+  digitalWrite(EN_RS485, LOW);
+  while(true){
+    if(digitalRead(DONE) == HIGH){
+      break;
+    }
+    delay(10);
+  }
+}
+void scaratrahang(){
+  delay(2000);
+  digitalWrite(EN_RS485,HIGH);
+  RS485.write("SL2:9");
+  delay(10);
+  digitalWrite(EN_RS485, LOW);
+  while(true){
+    if(digitalRead(DONE) == HIGH){
+      break;
+    }
+    delay(10);
   }
 }
 
@@ -236,8 +343,60 @@ void scaratrahang(){
 
 
 
+/******************************   FUNCTION  *******************************/
+void layly(){
+  scaracholayly();
+  slave1tachly();
+  slave1haly();
+  scaralayly();
 
-/******************************   MENU DRINK   *******************************/
+  // slave1tachly();
+  // slave1haly();
+  // scaracholayly();
+  // scaralayly();
+  // slave1homelayly();
+}
+void nguyenlieu1(){
+  scaranguyenlieu1();
+  rotnguyenlieu1();
+}
+void nguyenlieu2(){
+  scaranguyenlieu2();
+  rotnguyenlieu2();
+}
+void nguyenlieu3(){
+  scaranguyenlieu3();
+  rotnguyenlieu3();
+}
+void nguyenlieu4(){
+  scaranguyenlieu4();
+  rotnguyenlieu4();
+}
+void khuay(){
+  scaradkhuay();
+  slave1khuay();
+  scaradkhuayend();
+}
+void ice(){
+}
+void trahang(){
+  scaratrahang();
+  slave1trahang();
+  slave1homelayly();
+}
+void hottemp(){
+}
+
+
+
+
+
+
+
+
+
+
+/******************************   INSPECTION PROCESS   *******************************/
 void CFNONG(){
   
 }
@@ -249,44 +408,18 @@ void CFDAKKHONGDUONG(){
 }
 void CFSUA(){
   layly();
-  delay(5);
-  scaralayly();
-  delay(5);
 
-  scaranguyenlieu1();   //sua
-  delay(5);
   nguyenlieu1();
-  delay(5);
 
-  scaranguyenlieu2();    //cafe
-  delay(5);
   nguyenlieu2();
-  delay(5);
 
-  scaradkhuay();
-  delay(5);
   khuay();
-  delay(5);
 
-  scaradice();
-  delay(5);
   ice();
-  delay(5);
 
-  scaratrahang();
-  delay(5);
   trahang();
-  delay(5);
+
 }
-
-void CFSUAtest(){
-  layly();
-  delay(5);
-}
-
-
-/******************************   FUNCTION   *******************************/
-
 
 
 
@@ -307,10 +440,13 @@ void setup() {
   RS485.begin(9600);
 
   pinMode(EN_RS485,OUTPUT);
+  pinMode(rlice,OUTPUT);
+  pinMode(rlnungnhiet,OUTPUT);
   pinMode(bom1,OUTPUT);
   pinMode(bom2,OUTPUT);
   pinMode(bom3,OUTPUT);
   pinMode(bom4,OUTPUT);
+  pinMode(DONE1, INPUT);
   pinMode(DONE, INPUT);
 
   //Set Mode RX
@@ -322,9 +458,46 @@ void setup() {
   //   delay(300);
   // }
   // firebaseconnect();
+  digitalWrite(rlice,HIGH);
+  digitalWrite(bom1,HIGH);
+  digitalWrite(bom2,HIGH);
+  digitalWrite(bom3,HIGH);
+  digitalWrite(bom4,HIGH);
 
-  // delay(2000);
-  // layly();
+
+
+
+  //////////////////////TESTTTTT
+  layly();
+  nguyenlieu1();
+  khuay();
+  trahang();
+
+
+
+
+
+  // slave1tachly();
+  // slave1haly();
+  // scaracholayly();
+  // scaralayly();
+  // slave1homelayly();
+
+  // nguyenlieu1();
+  // nguyenlieu2();
+
+  // scaradkhuay();
+  // khuay();
+  // scaradkhuayend();
+
+
+  // scaratrahang();
+  // slave1trahang();
+
+
+
+  // scaranguyenlieu1();
+  // scaranguyenlieu2();
 }
 void loop() {
 
