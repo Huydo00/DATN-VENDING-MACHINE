@@ -61,18 +61,6 @@ void firebaseconnect(){
   config.timeout.serverResponse = 10;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 /******************************   MASTER:WEB  *******************************/
 
 void rotnguyenlieu1(){
@@ -111,20 +99,6 @@ void nungnong(){
   delay(3000);
   digitalWrite(rlnungnhiet,HIGH);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /******************************   SLAVE 1: STEP   *******************************/
 void slave1tachly(){
@@ -194,12 +168,6 @@ void slave1khuay(){
     delay(10);
   }
 }
-
-
-
-
-
-
 
 /******************************   SLAVE 2: SCARA   *******************************/
 void scaracholayly(){
@@ -335,25 +303,12 @@ void scaratrahang(){
   }
 }
 
-
-
-
-
-
-
-
 /******************************   FUNCTION  *******************************/
 void layly(){
   scaracholayly();
   slave1tachly();
   slave1haly();
   scaralayly();
-
-  // slave1tachly();
-  // slave1haly();
-  // scaracholayly();
-  // scaralayly();
-  // slave1homelayly();
 }
 void nguyenlieu1(){
   scaranguyenlieu1();
@@ -387,15 +342,6 @@ void trahang(){
 }
 void hottemp(){
 }
-
-
-
-
-
-
-
-
-
 
 /******************************   INSPECTION PROCESS   *******************************/
 void CFDADUONG(){
@@ -460,19 +406,26 @@ void CFSUA(){
   trahang();
   Firebase.RTDB.setInt(&fbdo, "/MACHINEROBOT/CFSUADA/CFSUADASTART", 0);
 }
+void CFBACXIU(){
 
+  layly();
 
+  //NGUYENLIEU
+  if(Firebase.RTDB.getString(&fbdo, "/MACHINEROBOT/CFBACXIU/nl1")){
+    FB_dataNL1 = (fbdo.stringData()).toInt();
+  } 
+  nguyenlieu1();
 
+  if(Firebase.RTDB.getString(&fbdo, "/MACHINEROBOT/CFBACXIU/nl2")){
+    FB_dataNL2 = (fbdo.stringData()).toInt();
+  }
+  nguyenlieu2();
 
-
-
-
-
-
-
-
-
-
+  khuay();
+  ice();
+  trahang();
+  Firebase.RTDB.setInt(&fbdo, "/MACHINEROBOT/CFBACXIU/CFSUADASTART", 0);
+}
 
 /******************************   MAIN   *******************************/
 void setup() {
@@ -497,44 +450,22 @@ void setup() {
   pinMode(DONE1, INPUT);
   pinMode(DONE, INPUT);
 
-  //Set Mode RX
   digitalWrite(EN_RS485,LOW);
   digitalWrite(rlice,HIGH);
   digitalWrite(bom1,HIGH);
   digitalWrite(bom2,HIGH);
   digitalWrite(bom3,HIGH);
   digitalWrite(bom4,HIGH);
-
-  //////////////////////TESTTTTT
-
-
-
-
-
-  // slave1tachly();
-  // slave1haly();
-  // scaracholayly();
-  // scaralayly();
-  // slave1homelayly(); 
-
-  // nguyenlieu1();
-  // nguyenlieu2();
-
-  // scaradkhuay();
-  // khuay();
-  // scaradkhuayend();
-
-
-  // scaratrahang();
-  // slave1trahang();
-
-
-
-  // scaranguyenlieu1();
-  // scaranguyenlieu2();
 }
-void loop() {
 
+void loop() {
+  if(Firebase.RTDB.getString(&fbdo, "/MACHINEROBOT/CFBACXIU/CFSUADASTART")){
+    CAFESUADA = (fbdo.stringData()).toInt();
+    if (CAFESUADA == 1){
+      CFBACXIU();
+      Firebase.RTDB.setInt(&fbdo, "/MACHINEROBOT/CFBACXIU/CFSUADASTART", 0);
+    }
+  }
   if(Firebase.RTDB.getString(&fbdo, "/MACHINEROBOT/CFSUADA/CFSUADASTART")){
     CAFESUADA = (fbdo.stringData()).toInt();
     if (CAFESUADA == 1){
@@ -542,6 +473,7 @@ void loop() {
       Firebase.RTDB.setInt(&fbdo, "/MACHINEROBOT/CFSUADA/CFSUADASTART", 0);
     }
   }
+
   if(Firebase.RTDB.getString(&fbdo, "/MACHINEROBOT/cfdendaDA/CFSUADASTART")){
     CAFESUADA = (fbdo.stringData()).toInt();
     if (CAFESUADA == 1){
@@ -553,8 +485,7 @@ void loop() {
     CAFESUADA = (fbdo.stringData()).toInt();
     if (CAFESUADA == 1){
       CFDAKHONGDUONG();
-      Firebase.RTDB.setInt(&fbdo, "/MACHINEROBOT/cfdenkodaDA/CFSUADASTART", 0);
+      Firebase.RTDB.setInt(&fbdo, "/MACHINEROBOT/CFSUADA/CFSUADASTART", 0);
     }
   }
-
 }

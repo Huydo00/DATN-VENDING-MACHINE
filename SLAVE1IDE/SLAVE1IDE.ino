@@ -182,7 +182,7 @@ void homeEMotor(){
 void KHUAY(){
   digitalWrite(CW, HIGH);
   digitalWrite(CCW, LOW);
-  delay(8000);
+  delay(7500);
   digitalWrite(CW, LOW);
   digitalWrite(CCW, LOW);
   digitalWrite(MOTORKHUAY, HIGH);
@@ -233,8 +233,13 @@ void setup() {
   Step_Y.setAcceleration(500);
 
   // digitalWrite(EN_RS485,LOW);
+
+  // LaylyIn();
+  // LaylyOUY();
   
   homeEMotor();
+  // delay(1000);
+  // KHUAY();
   homeX();
   homeY();
 
